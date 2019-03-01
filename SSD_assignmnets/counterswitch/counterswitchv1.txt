@@ -1,0 +1,49 @@
+
+/*but it is response bad two ssd same value*/
+SWI_u8GetSwiState(0,&Local_u8StateSW);
+
+			if(Local_u8StateSW == PRESSED)
+			{
+				if(Local_u8Counter1<=9)
+				{
+				Local_u8Counter1++;
+
+				}else
+				{
+					Local_u8Counter1=0;
+				}
+				if(Local_u8Dec2<0)
+				{
+					Local_u8Dec2=0;
+				}
+				else
+				{
+				Local_u8Dec2--;
+				}
+
+
+				SSD_u8SetOff(1);
+				SSD_u8SetOn(0);
+				SSD_u8SetValue(Local_u8Counter1,0);
+				_delay_ms(10);
+
+		        SSD_u8SetOff(0);
+		        SSD_u8SetOn(1);
+		        SSD_u8SetValue(Local_u8Dec2,1);
+			    _delay_ms(10);
+			}
+			else
+			{
+
+				SSD_u8SetOff(1);
+				SSD_u8SetOn(0);
+				SSD_u8SetValue(Local_u8Counter1,0);
+				_delay_ms(10);
+
+		        SSD_u8SetOff(0);
+		        SSD_u8SetOn(1);
+		        SSD_u8SetValue(Local_u8Dec2,1);
+			    _delay_ms(10);
+			}
+
+	}

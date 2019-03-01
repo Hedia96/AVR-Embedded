@@ -1,0 +1,81 @@
+
+problem here i ddint seperate the 1 digit  from 2 digit to count in diffrenet rrate 
+int main()
+{
+	//int j=0;
+	u8 u8_count_ms=0;
+	u8 u8_count_s=0;
+	int i;
+
+	//for(j=0;j<50;j++)
+		//	{
+	//DIO_u8SetPinDirection(DIO_PIN8,DIO_PIN_OUTPUT);
+    //((Register_8bit*)DDRB_ADDRESS) ->ByteAccess=0xFF;
+
+
+	while(1)
+	{
+//DIO_u8SetPinValue(DIO_PIN8,DIO_PIN_HIGH);
+		//((Register_8bit*)PORTB_ADDRESS) ->ByteAccess=0x01;
+		u8 u8_count_ms_1digit=u8_count_ms%10;
+		u8 u8_count_ms_2digit=(u8_count_ms/10)%10;
+		u8 u8_count_s_1digit=u8_count_s%10;
+		u8 u8_count_s_2digit=(u8_count_s/10)%10;
+		if(u8_count_ms ==99)
+		{
+			u8_count_ms_1digit=0;
+			u8_count_ms_2digit=0;
+			u8_count_s++;
+		}
+		for(i=0;i<50;i++)
+		{
+			SSD_u8SetOff(0);
+			SSD_u8SetOff(1);
+			SSD_u8SetOff(2);
+			SSD_u8SetOn(3);
+			SSD_u8SetValue(u8_count_ms_1digit,3);
+			//_delay_ms(10);
+			_delay_ms(10);
+		//}
+		//for(i=0;i<50;i++)
+		//{
+			SSD_u8SetOff(0);
+			SSD_u8SetOff(1);
+			SSD_u8SetOff(3);
+			SSD_u8SetOn(2);
+			SSD_u8SetValue(u8_count_ms_2digit,2);
+		//	_delay_ms(100);
+			_delay_ms(5);
+		//}
+
+		//for(i=0;i<200;i++)
+		//{
+			SSD_u8SetOff(0);
+			SSD_u8SetOff(2);
+			SSD_u8SetOff(3);
+			SSD_u8SetOn(1);
+			SSD_u8SetValue(u8_count_s_1digit,1);
+			//		_delay_ms(1000); //1 sec
+			_delay_ms(5);
+		//}
+
+
+		//for(i=0;i<50;i++)
+		//{
+		    SSD_u8SetOff(2);
+		    SSD_u8SetOff(1);
+		    SSD_u8SetOff(3);
+		    SSD_u8SetOn(0);
+		    SSD_u8SetValue(u8_count_s_2digit,0);
+//		    _delay_ms(10000); //10 sec
+		    _delay_ms(5);
+	   }
+
+		    u8_count_ms++;
+		}
+
+		//DIO_u8SetPinValue(DIO_PIN8,DIO_PIN_LOW);
+		//((Register_8bit*)PORTB_ADDRESS) ->ByteAccess=0x00;
+return 0;
+}
+
