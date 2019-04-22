@@ -1,0 +1,136 @@
+
+void DIO_u8Init(void)
+{
+	DDRA=(DIO_PIN0_Dir)|(DIO_PIN1_Dir << 1 )|(DIO_PIN2_Dir << 2)|(DIO_PIN3_Dir << 3 )|(DIO_PIN4_Dir << 4 )|(DIO_PIN5_Dir<< 5)|(DIO_PIN6_Dir << 6)|(DIO_PIN7_Dir << 7);
+	DDRB=(DIO_PIN8_Dir)|(DIO_PIN9_Dir << 1 )|(DIO_PIN10_Dir << 2)|(DIO_PIN11_Dir << 3 )|(DIO_PIN12_Dir << 4 )|(DIO_PIN13_Dir<< 5)|(DIO_PIN14_Dir << 6)|(DIO_PIN15_Dir << 7);
+	DDRC=(DIO_PIN16_Dir)|(DIO_PIN17_Dir << 1 )|(DIO_PIN18_Dir << 2)|(DIO_PIN19_Dir << 3 )|(DIO_PIN20_Dir << 4 )|(DIO_PIN21_Dir<< 5)|(DIO_PIN22_Dir << 6)|(DIO_PIN23_Dir << 7);
+	DDRD=(DIO_PIN24_Dir)|(DIO_PIN25_Dir << 1 )|(DIO_PIN26_Dir << 2)|(DIO_PIN27_Dir << 3 )|(DIO_PIN28_Dir << 4 )|(DIO_PIN29_Dir<< 5)|(DIO_PIN30_Dir << 6)|(DIO_PIN31_Dir << 7);
+
+	((Register*) PORTA_ADDRESS)->BitAccess.bit0=DIO_PIN0_VALUE;
+	((Register*) PORTA_ADDRESS)->BitAccess.bit1=DIO_PIN1_VALUE;
+	((Register*) PORTA_ADDRESS)->BitAccess.bit2=DIO_PIN2_VALUE;
+	((Register*) PORTA_ADDRESS)->BitAccess.bit3=DIO_PIN3_VALUE;
+	((Register*) PORTA_ADDRESS)->BitAccess.bit4=DIO_PIN4_VALUE;
+	((Register*) PORTA_ADDRESS)->BitAccess.bit5=DIO_PIN5_VALUE;
+	((Register*) PORTA_ADDRESS)->BitAccess.bit6=DIO_PIN6_VALUE;
+	((Register*) PORTA_ADDRESS)->BitAccess.bit7=DIO_PIN7_VALUE;
+
+	((Register*) PORTB_ADDRESS)->BitAccess.bit0=DIO_PIN8_VALUE;
+	((Register*) PORTB_ADDRESS)->BitAccess.bit1=DIO_PIN9_VALUE;
+	((Register*) PORTB_ADDRESS)->BitAccess.bit2=DIO_PIN10_VALUE;
+	((Register*) PORTB_ADDRESS)->BitAccess.bit3=DIO_PIN11_VALUE;
+	((Register*) PORTB_ADDRESS)->BitAccess.bit4=DIO_PIN12_VALUE;
+	((Register*) PORTB_ADDRESS)->BitAccess.bit5=DIO_PIN13_VALUE;
+	((Register*) PORTB_ADDRESS)->BitAccess.bit6=DIO_PIN14_VALUE;
+	((Register*) PORTB_ADDRESS)->BitAccess.bit7=DIO_PIN15_VALUE;
+
+	((Register*) PORTC_ADDRESS)->BitAccess.bit0=DIO_PIN16_VALUE;
+	((Register*) PORTC_ADDRESS)->BitAccess.bit1=DIO_PIN17_VALUE;
+	((Register*) PORTC_ADDRESS)->BitAccess.bit2=DIO_PIN18_VALUE;
+	((Register*) PORTC_ADDRESS)->BitAccess.bit3=DIO_PIN19_VALUE;
+	((Register*) PORTC_ADDRESS)->BitAccess.bit4=DIO_PIN20_VALUE;
+	((Register*) PORTC_ADDRESS)->BitAccess.bit5=DIO_PIN21_VALUE;
+	((Register*) PORTC_ADDRESS)->BitAccess.bit6=DIO_PIN22_VALUE;
+	((Register*) PORTC_ADDRESS)->BitAccess.bit7=DIO_PIN23_VALUE;
+
+	((Register*) PORTD_ADDRESS)->BitAccess.bit0=DIO_PIN24_VALUE;
+	((Register*) PORTD_ADDRESS)->BitAccess.bit1=DIO_PIN25_VALUE;
+	((Register*) PORTD_ADDRESS)->BitAccess.bit2=DIO_PIN26_VALUE;
+	((Register*) PORTD_ADDRESS)->BitAccess.bit3=DIO_PIN27_VALUE;
+	((Register*) PORTD_ADDRESS)->BitAccess.bit4=DIO_PIN28_VALUE;
+	((Register*) PORTD_ADDRESS)->BitAccess.bit5=DIO_PIN29_VALUE;
+	((Register*) PORTD_ADDRESS)->BitAccess.bit6=DIO_PIN30_VALUE;
+	((Register*) PORTD_ADDRESS)->BitAccess.bit7=DIO_PIN30_VALUE;
+
+}
+
+u8 DIO_u8SetPinDirection(u8 Copy_u8PinNb,u8 Copy_u8Direction)
+{
+	u8 u8Error=ERROR_NO;
+	u8 Local_u8PortNb ;
+	u8 Local_u8PinNb;
+
+
+	if((Copy_u8PinNb >=DIO_MAXPINNB)|| ((Copy_u8Direction != DIO_PIN_OUTPUT )&& (Copy_u8Direction != DIO_PIN_INPUT)))
+	{/*condition of error */
+		/*((u8PinNB >=DIO_MAXPINNB)||( Copy_u8Direction !=DIO_OUTPUT && Copy_u8Direction !=DIO_INPUT))*/
+		//more readable
+		Local_u8Error=ERROR_NOK;
+
+	}
+	else
+	{      /*get the number of port and number of pin number*/
+			//u8 Local_u8PortNb = u8PinNB /8;
+			// not magic number
+			 Local_u8PortNb = Copy_u8PinNb /NUMBER_PINS_IN_PORT;
+			 Local_u8PinNb  = Copy_u8PinNb % NUMBER_PINS_IN_PORT;
+			// put direction in
+		switch(Local_u8PortNb)
+		  {
+			case DIO_PORTA:
+			ASSIGN_BIT(DDRA,Local_u8PinNb,Copy_u8Direction);
+//			SET_BIT(DDRA,Local_u8PinNb);
+				break;
+			case DIO_PORTB:
+				ASSIGN_BIT(DDRB,Local_u8PinNb,Copy_u8Direction);
+				break;
+			case DIO_PORTC:
+				ASSIGN_BIT(DDRC,Local_u8PinNb,Copy_u8Direction);
+				break;
+			case DIO_PORTD:
+				ASSIGN_BIT(DDRD,Local_u8PinNb,Copy_u8Direction);
+				break;
+			//default:u8Error =ERROR_NOK;
+
+			}
+     }
+	return Local_u8Error;
+
+
+}
+u8 DIO_u8GetPinValue(u8 Copy_u8PinNb,u8* u8PtrToValue)
+{
+	u8 Local_u8Error=ERROR_NO;
+	u8 Local_u8PortNb ;
+	u8 Local_u8PinNb;
+	if(Copy_u8PinNb < DIO_MAXPINNB && u8PtrToValue !=NULL )
+		{
+		               /*get the number of port and number of pin number*/
+						//u8 Local_u8PortNb = u8PinNB /8;
+						// not magic number
+						Local_u8PortNb = Copy_u8PinNb /	NUMBER_PINS_IN_PORT;
+						Local_u8PinNb=Copy_u8PinNb % NUMBER_PINS_IN_PORT;
+						// put direction in
+						switch(Local_u8PortNb)
+								  {
+									case DIO_PINA:
+								    *(u8PtrToValue)=GET_BIT(PINA,Local_u8PinNb);
+										break;
+									case DIO_PINB:
+										*(u8PtrToValue)=GET_BIT(PINB,Local_u8PinNb);
+										break;
+									case DIO_PINC:
+										*(u8PtrToValue)=GET_BIT(PINC,Local_u8PinNb);
+										break;
+									case DIO_PIND:
+										*(u8PtrToValue)=GET_BIT(PIND,Local_u8PinNb);
+										break;
+									default:
+										u8Error =ERROR_NOK;
+
+									}
+
+
+
+
+
+		}else
+		{
+			Local_u8Error=ERROR_NOK;
+		}
+
+return Local_u8Error;
+
+}
+
+
